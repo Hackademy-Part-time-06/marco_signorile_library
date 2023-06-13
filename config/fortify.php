@@ -143,5 +143,6 @@ return [
             // 'window' => 0,
         ]),
     ],
+    'redirects'=>['logout'=>'libri','login'=>'libri']
 
 ];

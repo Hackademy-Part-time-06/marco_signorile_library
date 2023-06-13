@@ -17,13 +17,15 @@ use App\Http\Controllers\AuthorController;
 */
 
 
-Route::get('/', [BookController::class, 'index'])->name('index');
+Route::get('/libri', [BookController::class, 'index'])->name('index');
 Route::get('/libri/crea', [BookController::class, 'create'])->name('create');
 Route::post('/libri/salva', [BookController::class, 'store'])->name('store');
 Route::get('/libri/{book}/dettagli', [BookController::class, 'show'])->name('show');
 Route::get('/libri/{book}/modifica', [BookController::class, 'edit'])->name('edit');
 Route::put('/libri/{book}', [BookController::class, 'update'])->name('update');
 Route::delete('/libri/{book}', [BookController::class, 'destroy'])->name('destroy');
+
+Route::get('/mylibrary', [BookController::class, 'my_index'])->name('my_index');
 
 Route::get('/category', [CategoryController::class, 'category_index'])->name('category_index');
 Route::get('/category/crea', [CategoryController::class, 'category_create'])->name('category_create');
@@ -40,3 +42,4 @@ Route::get('/author/{author}/dettagli', [AuthorController::class, 'author_show']
 Route::get('/author/{author}/modifica', [AuthorController::class, 'author_edit'])->name('author_edit');
 Route::put('/author/{author}', [AuthorController::class, 'author_update'])->name('author_update');
 Route::delete('/author/{author}', [AuthorController::class, 'author_destroy'])->name('author_destroy');
+

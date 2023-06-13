@@ -17,12 +17,11 @@
                                 </span>
                                 @enderror
                             </div>
-
                             <div class="form-floating mb-3">
                             <select name="author_id" id="author_id" class="form-control">
-                                <option>{{$book->author->name}} {{$book->author->surname}}<option/>
+                                <!--<option>{{$book->author->name}} {{$book->author->surname}}<option/>-->
                                 @foreach($authors as $author)
-                                    <option value="{{ $author->id }}">{{ $author->name . ' ' . $author->surname }}</option>
+                                    <option value="{{ $author->id }}" @if ($author->id==$book->author_id)selected=""@endif>{{ $author->name . ' ' . $author->surname }}</option>
                                 @endforeach
                             </select>
                             <label for="Autore">Autore</label>
@@ -32,6 +31,48 @@
                                 </span>
                                 @enderror
                             </div>
+
+                             <div class="form-floating mb-3">
+
+                                @foreach ($categories as $category)
+                                <div class="form-check">
+                                    <input class="form-check-input" {{-- @if($book->categories->contains($category->id))
+                                    checked @endif --}}
+                                    @checked($book->categories->contains($category->id))
+                                    type="checkbox"
+                                    name="categories[]" value="{{$category->id}}" id="categories-{{$category->id}}">
+                                    <label class="form-check-label" for="categories-{{$category->id}}">
+                                        {{$category->name}}
+                                    </label>
+                                </div>
+                                @endforeach
+
+                                @error('category_id')
+                                <span class="text-danger">
+                                    {{$message}}
+                                </span>
+                                @enderror
+                            </div>
+                            <div class="form-floating mb-3">
+                                @foreach ($categories as $category)
+                                    <div class="form-check">
+                                        <input class="form-check-input"
+                                        @checked($book->categories->contains($category->id))
+                                        type="checkbox"
+                                        name="categories[]" value="{{$category->id}}" id="categories-{{$category->id}}">
+                                            <label class="form-check-label" for="categories-{{$category->id}}">
+                                                {{$category->name}}
+                                            </label>
+                                    </div>
+                                @endforeach
+
+                                @error('category_id')
+                                    <span class="text-danger">
+                                        {{$message}}
+                                    </span>
+                                @enderror
+                            </div>
+
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="pages" name="pages" type="text" value="{{$book->pages}}"
                                     placeholder="Inserisci Numero pagine Libro">
@@ -56,9 +97,18 @@
                                 <label for="pages">Immagine del Libro</label>
                                 <input class="form-control" id="image" name="image" type="file" value="">
                             </div>
-                            <div class="d-grid gap-3">
-                                <button class="btn btn-primary btn-lg p-2" type="submit">Aggiorna</button>
-                            </div>
+                            <div>
+                                <div class="row justify-content-md-center">
+                                    
+                                        <div class="d-grid gap-3">
+                                            <button class="btn btn-primary btn-lg p-2" type="submit">Aggiorna</button>
+                                        </div>
+                                        <form action="{{route('destroy',['book'=>$book['id']])}}" method="POST">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger">Elimina</button>
+                                        </form>
+                                </div>
                         </form>
                     </div>
                 </div>

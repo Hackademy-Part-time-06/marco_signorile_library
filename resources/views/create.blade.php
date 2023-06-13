@@ -41,6 +41,25 @@
                                 </span>
                                 @enderror
                             </div>
+                            Categorie:
+                            <div class="form-floating mb-3">
+                               
+                                @foreach ($categories as $category)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="categories[]"
+                                        value="{{$category->id}}" id="categories-{{$category->id}}">
+                                    <label class="form-check-label" for="categories-{{$category->id}}">
+                                        {{$category->name}}
+                                    </label>
+                                </div>
+                                @endforeach
+
+                                @error('category_id')
+                                <span class="text-danger">
+                                    {{$message}}
+                                </span>
+                                @enderror
+                            
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="pages" name="pages" type="text" value="{{old('pages')}}"
                                     placeholder="Inserisci Numero pagine Libro">
@@ -55,11 +74,6 @@
                                 <input class="form-control" id="year" name="year" type="text" value="{{old('year')}}"
                                     placeholder="Inserisci anno">
                                 <label for="pages">Anno del libro</label>
-                            </div>
-                            <div class="form-floating mb-3">
-                                <input class="form-control" id="mail" name="mail" type="email" value="{{old('mail')}}"
-                                    placeholder="Inserisci anno">
-                                <label for="pages">Mail utente</label>
                             </div>
                             <div class="form-floating mb-3">
                                 <input class="form-control" id="image" name="image" type="file">

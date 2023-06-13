@@ -10,6 +10,8 @@
                     <p>Autore: {{$book->author->name}} {{$book->author->surname}}</p>
                     <p>Numero Pagine: {{$book->pages}} </p>
                     <p>Anno pubblicazione: {{$book->year}} </p>
+                    <hr>
+                    <p>Aggiunto da: {{$book->user->name ?? 'Ignoto'}} </p>
                 </div>
             </div>
         </div>

@@ -26,7 +26,6 @@ class BookRequest extends FormRequest
                 "title" => "required|string|max:255|min:2",
                 "pages" => "required|numeric",
                 "year" => "required",
-                "mail" => "required",
                 "image"=> "mimes:bmp,png,jpeg,webpl,jpg",
                 "author_id" => "required",
         ];
@@ -42,7 +41,6 @@ class BookRequest extends FormRequest
             'pages.numeric'=>'Devi inserire un numero di pagine',
             'year.required'=>'Devi inserire anno',
             'image.mimes' => 'Inserisci immagine nei formati corretti: bmp,png,jpeg,webpl,jpg',
-            'mail.required'=>'Devi inserire la mail',
             'author_id' => 'Seleziona autore'
         ];
     }

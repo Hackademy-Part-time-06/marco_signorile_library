@@ -39,7 +39,7 @@
             <x-banner/>
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Profilo</a></li>
+            <li><a class="dropdown-item" href="{{ route('my_index') }}">My books</a></li>
             <li><hr class="dropdown-divider"></li>
             <form method="POST" action="{{ route('logout')}}">
           @csrf

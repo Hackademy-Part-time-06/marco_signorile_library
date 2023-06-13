@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookEditRequest;
+use App\Http\Requests\BookRequest;
 use Illuminate\Http\Request;
 use App\Models\Book;
-use App\Http\Requests\BookRequest;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\InsertMail;
 use App\Models\Author;
+use App\Models\Category;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use App\Mail\InsertMail;
 
 
 class BookController extends Controller
@@ -20,7 +22,8 @@ class BookController extends Controller
 
     public function create(){
         $authors = Author::all();
-        return view('create', compact('authors'));
+        $categories = Category::all();
+        return view('create', compact('authors', 'categories'));
     }
 
     public function store(BookRequest $request){
@@ -31,17 +34,22 @@ class BookController extends Controller
             $path_image = $request->file('image')->storeAs('public/images/cover', $path_name);
         }
 
-        Book::create([
+        $book = Book::create([
             'title' => $request-> title,
             'author_id' => $request-> author_id,
+            'category_id'=>$request-> category_id,
             'pages'=>$request-> pages,
             'year' => $request-> year,
-            'mail'=>$request->mail,
-            'image'=>$path_image
+            'mail'=> Auth::user()->email,
+            'image'=>$path_image,
+            'user_id' => Auth::user()->id
         ]);
-        $data=['mail'=>$request->mail,
+
+        $book->categories()->attach($request-> categories);
+
+        $data=['mail'=>Auth::user()->email,
         'title' => $request-> title];
-        Mail::to($request->mail)->send(new InsertMail($data));
+        Mail::to(Auth::user()->email)->send(new InsertMail($data));
         return redirect()->route('index')->with('success', 'Creazione avvenuta con successo!');
     }
 
@@ -56,8 +64,14 @@ class BookController extends Controller
     //}
 
     public function edit(Book $book){
+
+        if (!(Auth::user()->id == $book->user_id)) {
+            abort(401);
+        }
+
         $authors = Author::all();
-        return view ('edit',compact('book','authors'));
+        $categories = Category::all();
+        return view('edit', ['book' => $book, 'authors' => $authors, 'categories' => $categories]);
     }
 
     public function update(BookEditRequest $request, Book $book){
@@ -73,16 +87,29 @@ class BookController extends Controller
             'year'=>$request->year,
             'image'=>$path_image
         ]);
+
+        $book->categories()->sync($request->categories);
         return redirect()->route('index') ->with('success','Modifica effettuata');
     }
 
     public function destroy(Book $book){
+        $book->categories()->detach();
         $book->delete();
-        return redirect()->route('index')->with('success','Canellazione effettuata');
+        return redirect()->route('index')->with('success','Cancellazione effettuata');
     }
 
     public function __construct()
     {
         $this->middleware('auth')->except('index','show','category_index','category_show');
+    }
+
+    public function my_index(){
+        //$books = Book::all();
+        if(Auth::user()){
+            $books = Book::where('user_id',Auth::user()->id)->get();
+        }else{
+            $books = Book::all();
+        }
+        return view('my_index',['books'=>$books]);
     }
 }
